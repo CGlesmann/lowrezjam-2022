@@ -81,7 +81,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -243769249
   m_SortingLayer: 2
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 0cc6c22761e0f4c4b9cd3013f1399953, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -207,8 +207,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   icePlatformPrefab: {fileID: 7497394340523287648, guid: cbc0430765e5deb438584f2c268b0b1e, type: 3}
+  cloudShotPrefab: {fileID: 6931186256552593121, guid: 6b7f057cd37a772468d1667dff41079c, type: 3}
   icePlatformSpawnPoint: {fileID: 8474090003930332815}
+  cloudShotParent: {fileID: 0}
   icePlatformDelay: 0.25
+  cloudShotDelay: 0
 --- !u!114 &3753071413022559187
 MonoBehaviour:
   m_ObjectHideFlags: 0

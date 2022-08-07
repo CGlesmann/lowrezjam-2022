@@ -42,7 +42,7 @@ public class IcePlatform : MonoBehaviour
             }
 
             // Handle Melting
-            remainingLifespan -= Time.deltaTime;
+            remainingLifespan -= (Time.deltaTime * GameManager.meltingFactor);
             if (remainingLifespan <= 0f)
             {
                 GameObject.Destroy(gameObject);

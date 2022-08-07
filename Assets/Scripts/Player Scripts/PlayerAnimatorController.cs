@@ -60,6 +60,17 @@ public class PlayerAnimatorController : MonoBehaviour
         playerAnim.SetTrigger("IceShot");
     }
 
+    public void StartCloudShotAnimation()
+    {
+        if (!playerAnim)
+        {
+            Debug.LogError("Couldn't find Player Animator Reference, won't Start CloudShot anim");
+            return;
+        }
+
+        playerAnim.SetTrigger("CloudShot");
+    }
+
     public void SetDirection(float directionMod)
     {
         switch(directionMod)

@@ -149,6 +149,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CloudShot"",
+                    ""type"": ""Button"",
+                    ""id"": ""212210da-a021-40bf-8ea4-6c9fbd5a8edd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -171,6 +180,28 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""IcePlatform"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d2b60740-e8e2-49ce-9fc7-36933977417e"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""CloudShot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b6d67480-9e59-4182-890f-df93c35b73ef"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard_Mouse"",
+                    ""action"": ""CloudShot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -214,6 +245,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         // Abilities
         m_Abilities = asset.FindActionMap("Abilities", throwIfNotFound: true);
         m_Abilities_IcePlatform = m_Abilities.FindAction("IcePlatform", throwIfNotFound: true);
+        m_Abilities_CloudShot = m_Abilities.FindAction("CloudShot", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -315,11 +347,13 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Abilities;
     private IAbilitiesActions m_AbilitiesActionsCallbackInterface;
     private readonly InputAction m_Abilities_IcePlatform;
+    private readonly InputAction m_Abilities_CloudShot;
     public struct AbilitiesActions
     {
         private @PlayerControls m_Wrapper;
         public AbilitiesActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @IcePlatform => m_Wrapper.m_Abilities_IcePlatform;
+        public InputAction @CloudShot => m_Wrapper.m_Abilities_CloudShot;
         public InputActionMap Get() { return m_Wrapper.m_Abilities; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -332,6 +366,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @IcePlatform.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnIcePlatform;
                 @IcePlatform.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnIcePlatform;
                 @IcePlatform.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnIcePlatform;
+                @CloudShot.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCloudShot;
+                @CloudShot.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCloudShot;
+                @CloudShot.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCloudShot;
             }
             m_Wrapper.m_AbilitiesActionsCallbackInterface = instance;
             if (instance != null)
@@ -339,6 +376,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @IcePlatform.started += instance.OnIcePlatform;
                 @IcePlatform.performed += instance.OnIcePlatform;
                 @IcePlatform.canceled += instance.OnIcePlatform;
+                @CloudShot.started += instance.OnCloudShot;
+                @CloudShot.performed += instance.OnCloudShot;
+                @CloudShot.canceled += instance.OnCloudShot;
             }
         }
     }
@@ -369,5 +409,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     public interface IAbilitiesActions
     {
         void OnIcePlatform(InputAction.CallbackContext context);
+        void OnCloudShot(InputAction.CallbackContext context);
     }
 }
