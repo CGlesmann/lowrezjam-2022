@@ -39,9 +39,12 @@ public class PlayerMovement : MonoBehaviour
 		if (controller.collisions.above || controller.collisions.below)
 		{
 			velocity.y = 0;
+			animController.ToggleFallingAnimation(false);
 		}
 
 		float targetVelocityX = playerControls.Movement.HorizontalMovement.ReadValue<float>() * moveSpeed;
+		animController.ToggleWalkAnimation(targetVelocityX != 0f);
+
 		if (targetVelocityX != 0f)
         {
 			animController.SetDirection(Mathf.Sign(targetVelocityX));
@@ -50,6 +53,7 @@ public class PlayerMovement : MonoBehaviour
 		if ((playerControls.Movement.Jump.ReadValue<float>() == 1f) && controller.collisions.below)
         {
 			velocity.y = jumpVelocity;
+			animController.StartJumpAnimation();
 		}
 
 		velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelerationTimeGrounded : accelerationTimeAirborne);
@@ -60,7 +64,6 @@ public class PlayerMovement : MonoBehaviour
 		if (velocity != Vector3.zero)
         {
 			lastVelocity = velocity;
-
 		}
 	}
 }

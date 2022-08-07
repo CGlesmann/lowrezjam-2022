@@ -10,25 +10,55 @@ public class IcePlatform : MonoBehaviour
     [SerializeField] private float moveSpeed;
     [SerializeField] private float lifeSpan;
 
+    private SpriteRenderer sprRenderer;
     private CollisionHandler collisionHandler;
+
     private Vector3 velocity = Vector3.zero;
+    private float remainingLifespan;
 
     private void Awake()
     {
         collisionHandler = GetComponent<CollisionHandler>();
+        sprRenderer = GetComponent<SpriteRenderer>();
+
+        sprRenderer.color = new Color(sprRenderer.color.r, sprRenderer.color.g, sprRenderer.color.b, 1);
     }
 
     private void Update()
     {
-        if (velocity != Vector3.zero)
+        if (!collisionHandler.collisions.HasCollision())
         {
+            // Handle Moving
             collisionHandler.Move(velocity * Time.deltaTime);
+        }
+        else
+        {
+            if (velocity != Vector3.zero)
+            {
+                velocity = Vector3.zero;
+                remainingLifespan = lifeSpan;
+
+                return;
+            }
+
+            // Handle Melting
+            remainingLifespan -= Time.deltaTime;
+            if (remainingLifespan <= 0f)
+            {
+                GameObject.Destroy(gameObject);
+                return;
+            }
+
+            sprRenderer.color = new Color(sprRenderer.color.r, sprRenderer.color.g, sprRenderer.color.b, remainingLifespan / lifeSpan);
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        velocity = Vector3.zero;
+        if (collision.gameObject.CompareTag("DespawnTrigger"))
+        {
+            GameObject.Destroy(gameObject);
+        }
     }
 
     public void InitializePlatform(float directionMod, MoveDirection dir)

@@ -129,5 +129,15 @@ public class CollisionHandler : MonoBehaviour
 			above = below = false;
 			left = right = false;
 		}
+
+		public bool HasCollision()
+        {
+			return (
+				above ||
+				below ||
+				left ||
+				right
+			);
+        }
 	}
 }
