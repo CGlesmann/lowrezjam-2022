@@ -158,6 +158,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DownShotModifer"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""a8d3dfc9-f7f6-4ce4-aa9d-9af93968179a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -204,6 +213,28 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""CloudShot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""746450ba-32f7-4280-8c7c-1d9fe868e842"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard_Mouse"",
+                    ""action"": ""DownShotModifer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""96cea4f7-6f63-490b-b5ce-a36621493b39"",
+                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""DownShotModifer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -246,6 +277,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Abilities = asset.FindActionMap("Abilities", throwIfNotFound: true);
         m_Abilities_IcePlatform = m_Abilities.FindAction("IcePlatform", throwIfNotFound: true);
         m_Abilities_CloudShot = m_Abilities.FindAction("CloudShot", throwIfNotFound: true);
+        m_Abilities_DownShotModifer = m_Abilities.FindAction("DownShotModifer", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -348,12 +380,14 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private IAbilitiesActions m_AbilitiesActionsCallbackInterface;
     private readonly InputAction m_Abilities_IcePlatform;
     private readonly InputAction m_Abilities_CloudShot;
+    private readonly InputAction m_Abilities_DownShotModifer;
     public struct AbilitiesActions
     {
         private @PlayerControls m_Wrapper;
         public AbilitiesActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @IcePlatform => m_Wrapper.m_Abilities_IcePlatform;
         public InputAction @CloudShot => m_Wrapper.m_Abilities_CloudShot;
+        public InputAction @DownShotModifer => m_Wrapper.m_Abilities_DownShotModifer;
         public InputActionMap Get() { return m_Wrapper.m_Abilities; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -369,6 +403,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @CloudShot.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCloudShot;
                 @CloudShot.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCloudShot;
                 @CloudShot.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnCloudShot;
+                @DownShotModifer.started -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnDownShotModifer;
+                @DownShotModifer.performed -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnDownShotModifer;
+                @DownShotModifer.canceled -= m_Wrapper.m_AbilitiesActionsCallbackInterface.OnDownShotModifer;
             }
             m_Wrapper.m_AbilitiesActionsCallbackInterface = instance;
             if (instance != null)
@@ -379,6 +416,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @CloudShot.started += instance.OnCloudShot;
                 @CloudShot.performed += instance.OnCloudShot;
                 @CloudShot.canceled += instance.OnCloudShot;
+                @DownShotModifer.started += instance.OnDownShotModifer;
+                @DownShotModifer.performed += instance.OnDownShotModifer;
+                @DownShotModifer.canceled += instance.OnDownShotModifer;
             }
         }
     }
@@ -410,5 +450,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     {
         void OnIcePlatform(InputAction.CallbackContext context);
         void OnCloudShot(InputAction.CallbackContext context);
+        void OnDownShotModifer(InputAction.CallbackContext context);
     }
 }

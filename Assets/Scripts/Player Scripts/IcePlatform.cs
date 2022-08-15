@@ -14,6 +14,7 @@ public class IcePlatform : MonoBehaviour
     private CollisionHandler collisionHandler;
 
     private Vector3 velocity = Vector3.zero;
+    private bool isStatic;
     private float remainingLifespan;
 
     private void Awake()
@@ -26,7 +27,7 @@ public class IcePlatform : MonoBehaviour
 
     private void Update()
     {
-        if (!collisionHandler.collisions.HasCollision())
+        if (!collisionHandler.collisions.HasCollision() && !isStatic)
         {
             // Handle Moving
             collisionHandler.Move(velocity * Time.deltaTime);
@@ -61,8 +62,17 @@ public class IcePlatform : MonoBehaviour
         }
     }
 
-    public void InitializePlatform(float directionMod, MoveDirection dir)
+    public void InitializePlatform(bool isStatic, float directionMod, MoveDirection dir)
     {
+        this.isStatic = isStatic;
+        if (this.isStatic)
+        {
+            remainingLifespan = lifeSpan;
+            velocity = Vector3.zero;
+
+            return;
+        }
+
         switch(dir)
         {
             case MoveDirection.Horizontal:

@@ -190,9 +190,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85311e077951b7a46a49259b40f3a955, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpHeight: 1.75
-  timeToJumpApex: 0.3
+  jumpHeight: 2
+  timeToJumpApex: 0.25
   moveSpeed: 5
+  isGravityEnabled: 1
   lastVelocity: {x: 0, y: 0, z: 0}
 --- !u!114 &3002728171737095849
 MonoBehaviour:
@@ -211,7 +212,8 @@ MonoBehaviour:
   icePlatformSpawnPoint: {fileID: 8474090003930332815}
   cloudShotParent: {fileID: 0}
   icePlatformDelay: 0.25
-  cloudShotDelay: 0
+  cloudShotDelay: 5
+  downwardIcePlatformDelay: 3
 --- !u!114 &3753071413022559187
 MonoBehaviour:
   m_ObjectHideFlags: 0

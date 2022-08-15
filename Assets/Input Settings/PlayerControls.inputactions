@@ -136,6 +136,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "DownShotModifer",
+                    "type": "PassThrough",
+                    "id": "a8d3dfc9-f7f6-4ce4-aa9d-9af93968179a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -180,6 +189,28 @@
                     "processors": "",
                     "groups": "Keyboard_Mouse",
                     "action": "CloudShot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "746450ba-32f7-4280-8c7c-1d9fe868e842",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard_Mouse",
+                    "action": "DownShotModifer",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "96cea4f7-6f63-490b-b5ce-a36621493b39",
+                    "path": "<Gamepad>/leftStick/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "DownShotModifer",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

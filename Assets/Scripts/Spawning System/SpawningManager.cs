@@ -15,6 +15,10 @@ public class SpawningManager : MonoBehaviour
     [SerializeField] private Transform spawnPointReference;
     [SerializeField] private SpawnablePlatformGroup lastSpawnedGroup;
 
+    [Header("UI References")]
+    [SerializeField] private ScoreText scoreText;
+
+    private GameObject newSpawnedGroupToDestroy;
     private bool isScrolling = false;
     private bool isSpawning = false;
 
@@ -36,6 +40,11 @@ public class SpawningManager : MonoBehaviour
     public void BeginScrolling()
     {
         isScrolling = true;
+    }
+
+    public void FinishScrolling()
+    {
+        isScrolling = false;
     }
 
     private void HandleScrolling()
@@ -71,6 +80,13 @@ public class SpawningManager : MonoBehaviour
             ), 
             Quaternion.identity
         );
+
+        if (newSpawnedGroupToDestroy != null)
+        {
+            GameObject.Destroy(newSpawnedGroupToDestroy);
+            scoreText.UpdateScore();
+        }
+        newSpawnedGroupToDestroy = lastSpawnedGroup.gameObject;
 
         lastSpawnedGroup = newGroupPlatformInstance.GetComponent<SpawnablePlatformGroup>();
         nextYPosSpawningPoint = nextYPosSpawningPoint + spawningYPosDelay;

@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class PlayerManager : MonoBehaviour
 {
+    [Header("Object References")]
+    [SerializeField] private GameManager gameManager;
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("DeathTrigger") && (transform.position.y < collision.transform.position.y))
@@ -15,6 +18,9 @@ public class PlayerManager : MonoBehaviour
 
     private void HandlePlayerDeath()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        gameManager.HandleGameFinish();
+        GameObject.Destroy(gameObject);
+
+        // SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

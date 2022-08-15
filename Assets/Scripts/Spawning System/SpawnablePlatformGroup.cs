@@ -4,10 +4,22 @@ using UnityEngine;
 
 public class SpawnablePlatformGroup : MonoBehaviour
 {
-    [Header("Group Settings")]
+    #if UNITY_EDITOR
+    [Header("DEBUG Settings")]
+    [SerializeField] private Vector3 platformGroupSize = new Vector3(8f, 8f, 1f);
+    #endif
 
+    [Header("Group Settings")]
     [Tooltip("List of other SpawnablePlatformGroup Prefabs that can be spawned after this instance")]
     public List<GameObject> connectableSpawnableGroups;
+
+    #if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(transform.position, platformGroupSize);
+    }
+    #endif
 
     public void MoveGroup(Vector3 moveSpeed)
     {

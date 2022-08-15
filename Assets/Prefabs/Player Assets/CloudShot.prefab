@@ -118,5 +118,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ffead0fa5a06004ea3dd4afdf657e2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cloudShotSpeed: {x: -1, y: 5}
-  cloudShotLifetime: 3
+  cloudShotSpeed: {x: -1, y: 8}
+  cloudShotLifetime: 2.5

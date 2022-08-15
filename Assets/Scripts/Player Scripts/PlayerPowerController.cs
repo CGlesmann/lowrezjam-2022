@@ -16,12 +16,16 @@ public class PlayerPowerController : MonoBehaviour
     [Header("Ice Platform Settings")]
     [SerializeField] private float icePlatformDelay;
     [SerializeField] private float cloudShotDelay;
+    [SerializeField] private float downwardIcePlatformDelay;
 
-    private PlayerAnimatorController playerAnimationController; 
+    private PlayerAnimatorController playerAnimationController;
+    private PlayerMovement playerMovement;
     private PlayerControls controlHandler;
 
+    private bool isPerformingDownwardIcePlatform;
     private float remainingIcePlatformDelay;
     private float remainingCloudShotDelay;
+    private float remainingDownwardIcePlatformDelay;
 
     private void OnDestroy()
     {
@@ -29,6 +33,10 @@ public class PlayerPowerController : MonoBehaviour
         {
             controlHandler.Movement.HorizontalMovement.performed -= HandleHorizontalPerformed;
             controlHandler.Abilities.IcePlatform.performed -= HandleIcePlatformPerformed;
+            controlHandler.Abilities.CloudShot.performed -= HandleCloudShotPerformed;
+            controlHandler.Abilities.DownShotModifer.performed -= HandleIceShotDownModifier;
+
+            controlHandler = null;
         }
     }
 
@@ -36,16 +44,19 @@ public class PlayerPowerController : MonoBehaviour
     {
         // Component Refs
         playerAnimationController = GetComponent<PlayerAnimatorController>();
+        playerMovement = GetComponent<PlayerMovement>();
 
         // Input Setup
         controlHandler = new PlayerControls();
         controlHandler.Movement.HorizontalMovement.performed += HandleHorizontalPerformed;
         controlHandler.Abilities.IcePlatform.performed += HandleIcePlatformPerformed;
         controlHandler.Abilities.CloudShot.performed += HandleCloudShotPerformed;
+        controlHandler.Abilities.DownShotModifer.performed += HandleIceShotDownModifier;
 
         controlHandler.Enable();
 
         // Ability Setup
+        isPerformingDownwardIcePlatform = false;
         remainingIcePlatformDelay = 0f;
         remainingCloudShotDelay = 0f;
     }
@@ -61,6 +72,11 @@ public class PlayerPowerController : MonoBehaviour
         {
             remainingCloudShotDelay -= Time.deltaTime;
         }
+
+        if (remainingDownwardIcePlatformDelay > 0f)
+        {
+            remainingDownwardIcePlatformDelay -= Time.deltaTime;
+        }
     }
 
     private void HandleHorizontalPerformed(InputAction.CallbackContext ctx)
@@ -75,17 +91,43 @@ public class PlayerPowerController : MonoBehaviour
         }
     }
 
+    private void HandleIceShotDownModifier(InputAction.CallbackContext ctx)
+    {
+        if (remainingDownwardIcePlatformDelay > 0f || ctx.ReadValue<float>() == 0f) return;
+
+        if (!playerMovement.collisions.below || isPerformingDownwardIcePlatform)
+        {
+            float currentValue = ctx.ReadValue<float>();
+
+            // Isn't pressed down
+            if (currentValue == 0)
+            {
+                isPerformingDownwardIcePlatform = false;
+            }
+            else if (currentValue == 1)
+            {
+                // Is being pressed down
+                isPerformingDownwardIcePlatform = true;
+            }
+            
+        }
+    }
+
     private void HandleIcePlatformPerformed(InputAction.CallbackContext ctx)
     {
-        if (remainingIcePlatformDelay > 0f)
-        {
-            return;
-        }
+        if (remainingIcePlatformDelay > 0f) return;
 
         if (ctx.phase == InputActionPhase.Performed && ctx.ReadValue<float>() == 1f)
         {
             // Starting Animation
             playerAnimationController.StartIceShotAnimation();
+
+            // Pausing Falling
+            if (isPerformingDownwardIcePlatform)
+            {
+                playerMovement.isGravityEnabled = false;
+                remainingDownwardIcePlatformDelay = downwardIcePlatformDelay;
+            }
 
             // Setting Cooldown
             remainingIcePlatformDelay = icePlatformDelay;
@@ -94,10 +136,7 @@ public class PlayerPowerController : MonoBehaviour
 
     private void HandleCloudShotPerformed(InputAction.CallbackContext ctx)
     {
-        if (!CloudShot.isCloudShotActive && remainingIcePlatformDelay > 0f)
-        {
-            return;
-        }
+        if (CloudShot.activeCloudShotInstance != null || remainingCloudShotDelay > 0f) return;
 
         if (ctx.phase == InputActionPhase.Performed && ctx.ReadValue<float>() == 1f)
         {
@@ -118,7 +157,33 @@ public class PlayerPowerController : MonoBehaviour
         IcePlatform newIcePlatformHandler = newIcePlatformObj.GetComponent<IcePlatform>();
         float movementDirMod = Mathf.Sign(icePlatformSpawnPoint.localPosition.x);
 
-        newIcePlatformHandler.InitializePlatform(movementDirMod, IcePlatform.MoveDirection.Horizontal);
+        // Resume Falling
+        playerMovement.isGravityEnabled = true;
+
+        if (!isPerformingDownwardIcePlatform)
+        {
+            newIcePlatformHandler.InitializePlatform(false, movementDirMod, IcePlatform.MoveDirection.Horizontal);
+            return;
+        }
+        else
+        {
+            newIcePlatformHandler.transform.position = new Vector3(
+                newIcePlatformHandler.transform.position.x,
+                transform.position.y - 1.25f,
+                newIcePlatformHandler.transform.position.z
+            );
+
+            /*
+            transform.position = new Vector3(
+                transform.position.x,
+                transform.position.y + 0.25f,
+                transform.position.z
+            );
+            */
+
+            isPerformingDownwardIcePlatform = false;
+            newIcePlatformHandler.InitializePlatform(true, movementDirMod, IcePlatform.MoveDirection.Horizontal);
+        }
     }
 
     // Called by CloudShot Animation
